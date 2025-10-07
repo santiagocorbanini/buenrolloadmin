@@ -18,7 +18,7 @@ jobs:
 
       - name: 📝 Creando .env.production
         run: |
-          echo VITE_SERVER_API=https://api.pampacode.com > .env.production
+          echo VITE_SERVER_API=https://buenrollo.pampacode.com > .env.production
           echo VITE_TOKEN_SECRET=${{ secrets.VITE_TOKEN_SECRET }} >> .env.production
           echo VITE_FIREBASE_API_KEY=${{ secrets.VITE_FIREBASE_API_KEY }} >> .env.production
           echo VITE_FIREBASE_AUTH_DOMAIN=${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }} >> .env.production
@@ -49,7 +49,7 @@ jobs:
       - name: 📤 Subir carpeta dist/ por FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: ftp.unplanenjunin.com.ar
+          server: ftp.buenrollobarcelona.com
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           server-dir: /public_html/backoffice/

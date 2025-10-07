@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import unplanLogo from "../assets/unplan-logo.png";
+import buenrolloLogo from "../assets/logo-sin-fondo.png";
 import { loginSchema } from "@/schemas/loginSchema";
 import Spinner from "./ui/Spinner";
 
@@ -47,9 +47,9 @@ const Login = () => {
         <div className="w-full md:w-1/2 bg-gray-100 flex items-center justify-center p-6">
           <img
             className="max-w-full h-auto object-contain"
-            src={unplanLogo}
-            alt="UnPlanLogo"
-            aria-label="Logo de Un Plan"
+            src={buenrolloLogo}
+            alt="Buen Rollo Logo"
+            aria-label="Logo de Buen Rollo"
           />
         </div>
         <div className="w-full md:w-1/2 p-8">

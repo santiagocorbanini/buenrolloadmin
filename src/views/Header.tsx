@@ -4,7 +4,7 @@ import { useState } from "react";
 import * as Tooltip from "@radix-ui/react-tooltip";
 // import { ThemeToggle } from "@/components/ui/theme-toggle";
 import ConfirmationModal from "@/components/ConfirmationModal";
-import LogoUnPlan from "@/assets/Logo-UnPlan.jpg";
+import LogoBuenRollo from "@/assets/nota-azul.png";
 
 interface HeaderProps {
   email?: string;
@@ -32,9 +32,9 @@ const Header = ({ email, menuOpen, setMenuOpen }: HeaderProps) => {
         </button>
 
         <div className="flex items-center gap-2 md:flex-none absolute left-1/2 transform -translate-x-1/2 md:static md:left-auto md:transform-none">
-          <img src={LogoUnPlan} alt="Logo" className="w-8 h-8 rounded-sm" />
+          <img src={LogoBuenRollo} alt="Logo" className="w-8 h-8 rounded-sm" />
           <span className="font-bold text-lg tracking-tight">
-            Un Plan Admin
+            Buen Rollo Admin
           </span>
         </div>
 
