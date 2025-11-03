@@ -2,51 +2,49 @@ name: 🚀🚀 Deployando 🚀🚀
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Clonando repo1
-        uses: actions/checkout@v3
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
 
       - name: ⚙️ Instalando dependencias
-        run: npm install
+        run: npm ci
 
-      - name: 📝 Creando .env.production
+      - name: 📝 Crear .env.production (Vite)
         run: |
-          echo VITE_SERVER_API=https://buenrollo.pampacode.com > .env.production
-          echo VITE_TOKEN_SECRET=${{ secrets.VITE_TOKEN_SECRET }} >> .env.production
-          echo VITE_FIREBASE_API_KEY=${{ secrets.VITE_FIREBASE_API_KEY }} >> .env.production
-          echo VITE_FIREBASE_AUTH_DOMAIN=${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }} >> .env.production
-          echo VITE_FIREBASE_PROJECT_ID=${{ secrets.VITE_FIREBASE_PROJECT_ID }} >> .env.production
-          echo VITE_FIREBASE_STORAGE_BUCKET=${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }} >> .env.production
-          echo VITE_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }} >> .env.production
-          echo VITE_FIREBASE_APP_ID=${{ secrets.VITE_FIREBASE_APP_ID }} >> .env.production
-          echo VITE_FIREBASE_MEASUREMENT_ID=${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }} >> .env.production
+          {
+            echo "VITE_SERVER_API=https://buenrollo.pampacode.com"
+            echo "VITE_TOKEN_SECRET=${{ secrets.VITE_TOKEN_SECRET }}"
+            echo "VITE_FIREBASE_API_KEY=${{ secrets.VITE_FIREBASE_API_KEY }}"
+            echo "VITE_FIREBASE_AUTH_DOMAIN=${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}"
+            echo "VITE_FIREBASE_PROJECT_ID=${{ secrets.VITE_FIREBASE_PROJECT_ID }}"
+            echo "VITE_FIREBASE_STORAGE_BUCKET=${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}"
+            echo "VITE_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}"
+            echo "VITE_FIREBASE_APP_ID=${{ secrets.VITE_FIREBASE_APP_ID }}"
+            echo "VITE_FIREBASE_MEASUREMENT_ID=${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}"
+          } > .env.production
 
-      - name: 🔍 Verificar variables de entorno
+      - name: ✅ Chequeos rápidos (sin exponer secrets)
         run: |
-          echo "=== Verificando contenido de .env.production ==="
-          cat .env.production
-          echo "=== Verificando que las variables no estén vacías ==="
-          if [ -z "${{ secrets.VITE_FIREBASE_API_KEY }}" ]; then echo "❌ VITE_FIREBASE_API_KEY está vacío"; else echo "✅ VITE_FIREBASE_API_KEY tiene valor"; fi
-          if [ -z "${{ secrets.VITE_FIREBASE_PROJECT_ID }}" ]; then echo "❌ VITE_FIREBASE_PROJECT_ID está vacío"; else echo "✅ VITE_FIREBASE_PROJECT_ID tiene valor"; fi
+          test -s .env.production
+          [ -n "${{ secrets.VITE_FIREBASE_API_KEY }}" ] || (echo "VITE_FIREBASE_API_KEY vacío" && exit 1)
+          [ -n "${{ secrets.FTP_USERNAME }}" ] || (echo "FTP_USERNAME vacío" && exit 1)
 
-      - name: 🛠 Generando build (carpeta dist/)
-        run: |
-          # Verificar nombres de archivos
-          find src -type f -name "*.tsx" -o -name "*.ts" | sort
-          # Corregir importación en App.tsx
-          # Ajuste para sistemas sensibles a mayúsculas/minúsculas
-          sed -i 's/import Filter from ".\/components\/Filter";/import Filter from ".\/components\/FilterComponent";/g' src/App.tsx
-          # Intentar build
-          npm run build
+      - name: 🛠 Build (carpeta dist/)
+        run: npm run build
 
-      - name: 📤 Subir carpeta dist/ por FTP
+      - name: 📤 Deploy por FTP (dist/ → /public_html/backoffice/)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ftp.buenrollobarcelona.com
@@ -54,3 +52,4 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           server-dir: /public_html/backoffice/
           local-dir: dist/
+          dangerous-clean-slate: false
