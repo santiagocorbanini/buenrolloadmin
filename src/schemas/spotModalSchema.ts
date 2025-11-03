@@ -12,10 +12,7 @@ export const spotModalSchema = yup.object().shape({
   link_direccion: yup
     .string()
     .notRequired()
-    .test("is-url", "Debe contener www", (value) => {
-      if (!value) return true;
-      return value.includes("www");
-    }),
+    ,
   telefono: yup
     .string()
     .notRequired()
@@ -34,9 +31,5 @@ export const spotModalSchema = yup.object().shape({
   delivery: yup.string().notRequired(),
   web: yup
     .string()
-    .notRequired()
-    .test("is-url", "Debe contener www", (value) => {
-      if (!value) return true;
-      return value.includes("www");
-    }),
+    .notRequired(),
 });

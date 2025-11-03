@@ -316,9 +316,6 @@ export default function EditSpotModal({ spot }: EditSpotModalProps) {
                   register={register("web", {
                     validate: (value) => {
                       if (!value) return true;
-                      if (!value.includes("www")) {
-                        return "Debe contener www";
-                      }
                       return true;
                     },
                   })}
